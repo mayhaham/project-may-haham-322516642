@@ -16,7 +16,6 @@ if (filterGenre !== null) {
 if (filterWing !== null) {
   filterWing.addEventListener("change", renderItems);
 }
-window.addEventListener("load", renderItems);
 
 function handleSubmit(event) {
   event.preventDefault();
@@ -47,17 +46,11 @@ function handleSubmit(event) {
     return;
   }
 
-  const items = getItems();
-  items.push(newItem);
-  localStorage.setItem(storageKey, JSON.stringify(items));
-
   form.reset();
-  showMessage("ההרשמה בוצעה בהצלחה!", "success");
+  showMessage("הטופס נשלח בהצלחה (ללא שמירה בפועל).", "success");
 
-  setTimeout(function () {
-    window.location.href = "view.html";
-  }, 1000);
 }
+
 
 function validateItem(item) {
   const errors = [];
