@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>הרשמה לפסטיבל שירי כנף</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <h1>חידון שירים לבעלי כנפיים</h1>
+    <p>מערכת הרשמה לתחרות המעופפים המוזיקלית!</p>
+  </header>
+
+  <main>
+    <section class="form-section">
+      <h2>טופס הרשמה</h2>
+      <form id="registrationForm">
+        <label for="name">שם פרטי ובמה:</label>
+        <input type="text" id="name" required />
+
+        <label for="email">אימייל:</label>
+        <input type="email" id="email" required />
+
+        <label for="wingType">סוג כנפיים:</label>
+        <select id="wingType" required>
+          <option value="">בחר סוג כנפיים</option>
+          <option>נוצות</option>
+          <option>עור</option>
+          <option>אור</option>
+        </select>
+
+        <label for="genre">סגנון מוזיקלי:</label>
+        <input type="text" id="genre" required />
+
+        <label for="song">שיר נבחר:</label>
+        <input type="text" id="song" required />
+
+        <label for="experience">ניסיון קודם (בשנים):</label>
+        <input type="number" id="experience" min="0" max="50" required />
+
+        <label> הקול נבדק על ידי נשר מוסמך <input type="checkbox" id="verified" /> </label>
+
+        <button type="submit">שלח טופס</button>
+      </form>
+      <div id="message" role="alert"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

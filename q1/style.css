@@ -1,0 +1,69 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+  text-align: center;
+}
+
+.course-img {
+  width: 280px;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  padding: 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.card-subtitle {
+  font-size: 14px;
+  color: #dddddd;
+}
+
+.card-text {
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.mobile-label {
+  font-size: 10px;
+  color: #ffc107;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 10px;
+}
+
+.card-header {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px 12px;
+}
+
+.level-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  color: #ffc107;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>רשימת מועמדים - שירי כנף</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>רשימת המועמדים</h1>
+    <p>סינון, צפייה ועדכון סטטוס</p>
+  </header>
+
+  <main>
+    <section class="list-section">
+      <h2>מועמדים שנשמרו</h2>
+
+      <div class="filters">
+        <label for="filterGenre">סינון לפי סגנון:</label>
+        <input type="text" id="filterGenre">
+
+        <label for="filterWing">סינון לפי סוג כנפיים:</label>
+        <select id="filterWing">
+          <option value="">הצג הכל</option>
+          <option value="נוצות">נוצות</option>
+          <option value="עור">עור</option>
+          <option value="אור">אור</option>
+        </select>
+      </div>
+
+      <div id="stats"></div>
+      <ul id="applicantsList"></ul>
+      <div id="message" role="alert"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
