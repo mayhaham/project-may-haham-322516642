@@ -51,7 +51,7 @@ function handleSubmit(event) {
   localStorage.setItem(storageKey, JSON.stringify(existingItems));
 
   showMessage("הטופס נשלח בהצלחה!", "success");
-  renderSingleItem(newItem);
+  renderItems();
 
   form.reset();
 }
@@ -97,9 +97,7 @@ function getItems() {
 }
 
 function renderItems() {
-  if (list === null) {
-    return;
-  }
+  if (list === null) return;
 
   const allItems = getItems();
 
@@ -114,17 +112,8 @@ function renderItems() {
   }
 
   const filtered = allItems.filter(function (item) {
-    let genreMatch = false;
-    let wingMatch = false;
-
-    if (genreValue === "" || item.genre.includes(genreValue)) {
-      genreMatch = true;
-    }
-
-    if (wingValue === "" || item.wing === wingValue) {
-      wingMatch = true;
-    }
-
+    let genreMatch = genreValue === "" || item.genre.includes(genreValue);
+    let wingMatch = wingValue === "" || item.wing === wingValue;
     return genreMatch && wingMatch;
   });
 
@@ -134,9 +123,7 @@ function renderItems() {
 }
 
 function renderSingleItem(item) {
-  if (list === null) {
-    return;
-  }
+  if (list === null) return;
 
   const li = document.createElement("li");
   li.innerHTML =
@@ -169,6 +156,7 @@ function renderSingleItem(item) {
 
   const errorMsg = document.createElement("div");
   errorMsg.className = "error-message";
+  errorMsg.style.display = "none";
 
   btns.appendChild(passBtn);
   btns.appendChild(failBtn);
@@ -183,23 +171,21 @@ function updateItem(item, newStatus, event) {
 
   let foundIndex = -1;
   for (let i = 0; i < items.length; i++) {
-    if (items[i].name === item.name &&
-        items[i].email === item.email &&
-        items[i].song === item.song) {
+    if (
+      items[i].name === item.name &&
+      items[i].email === item.email &&
+      items[i].song === item.song
+    ) {
       foundIndex = i;
       break;
     }
   }
 
-  if (foundIndex === -1) {
-    return;
-  }
+  if (foundIndex === -1) return;
 
   const currentItem = items[foundIndex];
 
   if (newStatus === "עבר אודישן" && currentItem.verified !== true) {
-    renderItems();
-
     const buttonClicked = event.target;
     const li = buttonClicked.closest("li");
     if (li !== null) {
@@ -209,7 +195,6 @@ function updateItem(item, newStatus, event) {
         errorMsg.style.display = "block";
       }
     }
-
     return;
   }
 
@@ -223,9 +208,11 @@ function deleteItem(item) {
 
   let index = -1;
   for (let i = 0; i < items.length; i++) {
-    if (items[i].name === item.name &&
-        items[i].email === item.email &&
-        items[i].song === item.song) {
+    if (
+      items[i].name === item.name &&
+      items[i].email === item.email &&
+      items[i].song === item.song
+    ) {
       index = i;
       break;
     }
@@ -239,12 +226,9 @@ function deleteItem(item) {
 }
 
 function updateStats(items) {
-  if (stats === null) {
-    return;
-  }
+  if (stats === null) return;
 
   const total = items.length;
-
   let passed = 0;
   for (let i = 0; i < items.length; i++) {
     if (items[i].status === "עבר אודישן") {
@@ -265,9 +249,7 @@ function updateStats(items) {
   let wingsText = "";
   const keys = Object.keys(wingsStats);
   for (let i = 0; i < keys.length; i++) {
-    const type = keys[i];
-    const count = wingsStats[type];
-    wingsText += type + ": " + count;
+    wingsText += keys[i] + ": " + wingsStats[keys[i]];
     if (i < keys.length - 1) {
       wingsText += " | ";
     }
