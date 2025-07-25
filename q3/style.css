@@ -110,22 +110,21 @@ button:hover {
   background-color: #1e5990;
 }
 
-.checkbox-wrapper label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-direction: row-reverse;
-  font-size: 15px;
-}
-
 .checkbox-wrapper {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-direction: row-reverse;
-  justify-content: flex-start;
+  justify-content: flex-end;
   margin-top: 10px;
+  margin-bottom: 20px;
 }
+
+.checkbox-wrapper label {
+  white-space: nowrap;
+  font-size: 15px;
+}
+
 
 .filter-item {
   display: flex;
