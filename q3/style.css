@@ -125,18 +125,9 @@ button:hover {
   font-size: 15px;
 }
 
-
 .filter-item {
   display: flex;
   flex-direction: column;
-}
-
-
-@media (max-width: 600px) {
-  .checkbox-wrapper label {
-    flex-direction: column-reverse;
-    align-items: flex-start;
-  }
 }
 
 #message {
@@ -269,4 +260,50 @@ footer {
   padding: 20px;
   font-size: 17px;
   margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .checkbox-wrapper {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .status-btns {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .status-btns button {
+    flex: 1 1 45%;
+    max-width: 140px;
+  }
+
+  .header-img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  main {
+    padding: 10px;
+  }
+
+  form {
+    gap: 12px;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }

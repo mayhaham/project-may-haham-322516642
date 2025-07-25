@@ -23,10 +23,10 @@
       <h2>טופס הרשמה</h2>
       <form id="registrationForm">
         <label for="name">שם פרטי ובמה:</label>
-        <input type="text" id="name" />
+        <input type="text" id="name" name="name" />
 
         <label for="email">אימייל:</label>
-        <input type="email" id="email" />
+        <input type="text" id="email" />
 
         <label for="wingType">סוג כנפיים:</label>
         <select id="wingType">
@@ -43,7 +43,8 @@
         <input type="text" id="song" />
 
         <label for="experience">ניסיון קודם (בשנים):</label>
-        <input type="number" id="experience" min="0" max="50" />
+        <input type="number" id="experience" />
+
 
         <div class="checkbox-wrapper">
         <input type="checkbox" id="verified" />

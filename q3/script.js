@@ -10,6 +10,7 @@ const stats = document.getElementById("stats");
 if (form !== null) {
   form.addEventListener("submit", handleSubmit);
 }
+
 if (filterGenre !== null) {
   filterGenre.addEventListener("input", renderItems);
 }
@@ -46,14 +47,20 @@ function handleSubmit(event) {
     return;
   }
 
-  const existingItems = getItems();
-  existingItems.push(newItem);
-  localStorage.setItem(storageKey, JSON.stringify(existingItems));
+  if (list !== null) {
 
-  showMessage("הטופס נשלח בהצלחה!", "success");
-  renderItems();
+    renderSingleItem(newItem);
+    showMessage("הטופס נשלח בהצלחה!", "success");
+    form.reset();
+  } else {
 
-  form.reset();
+    const existingItems = getItems();
+    existingItems.push(newItem);
+    localStorage.setItem(storageKey, JSON.stringify(existingItems));
+    renderItems();
+    showMessage("הטופס נשלח בהצלחה!", "success");
+    form.reset();
+  }
 }
 
 function validateItem(item) {
@@ -91,9 +98,8 @@ function getItems() {
   const stored = localStorage.getItem(storageKey);
   if (stored !== null) {
     return JSON.parse(stored);
-  } else {
-    return [];
   }
+  return [];
 }
 
 function renderItems() {
@@ -101,19 +107,12 @@ function renderItems() {
 
   const allItems = getItems();
 
-  let genreValue = "";
-  if (filterGenre !== null) {
-    genreValue = filterGenre.value.trim();
-  }
-
-  let wingValue = "";
-  if (filterWing !== null) {
-    wingValue = filterWing.value;
-  }
+  let genreValue = filterGenre ? filterGenre.value.trim() : "";
+  let wingValue = filterWing ? filterWing.value : "";
 
   const filtered = allItems.filter(function (item) {
-    let genreMatch = genreValue === "" || item.genre.includes(genreValue);
-    let wingMatch = wingValue === "" || item.wing === wingValue;
+    const genreMatch = genreValue === "" || item.genre.includes(genreValue);
+    const wingMatch = wingValue === "" || item.wing === wingValue;
     return genreMatch && wingMatch;
   });
 
@@ -135,21 +134,18 @@ function renderSingleItem(item) {
 
   const passBtn = document.createElement("button");
   passBtn.textContent = "עבר אודישן";
-  passBtn.setAttribute("aria-label", "שנה סטטוס לעבר אודישן");
   passBtn.onclick = function (event) {
     updateItem(item, "עבר אודישן", event);
   };
 
   const failBtn = document.createElement("button");
   failBtn.textContent = "לא עבר";
-  failBtn.setAttribute("aria-label", "שנה סטטוס ללא עבר");
   failBtn.onclick = function (event) {
     updateItem(item, "לא עבר", event);
   };
 
   const delBtn = document.createElement("button");
   delBtn.textContent = "מחק";
-  delBtn.setAttribute("aria-label", "מחק מועמד זה");
   delBtn.onclick = function () {
     deleteItem(item);
   };
@@ -168,32 +164,20 @@ function renderSingleItem(item) {
 
 function updateItem(item, newStatus, event) {
   const items = getItems();
+  const index = items.findIndex(i =>
+    i.name === item.name && i.email === item.email && i.song === item.song
+  );
 
-  let foundIndex = -1;
-  for (let i = 0; i < items.length; i++) {
-    if (
-      items[i].name === item.name &&
-      items[i].email === item.email &&
-      items[i].song === item.song
-    ) {
-      foundIndex = i;
-      break;
-    }
-  }
+  if (index === -1) return;
 
-  if (foundIndex === -1) return;
-
-  const currentItem = items[foundIndex];
+  const currentItem = items[index];
 
   if (newStatus === "עבר אודישן" && currentItem.verified !== true) {
-    const buttonClicked = event.target;
-    const li = buttonClicked.closest("li");
-    if (li !== null) {
-      const errorMsg = li.querySelector(".error-message");
-      if (errorMsg !== null) {
-        errorMsg.textContent = "לא ניתן לעבור אודישן ללא אישור נשר מוסמך";
-        errorMsg.style.display = "block";
-      }
+    const li = event.target.closest("li");
+    const errorMsg = li.querySelector(".error-message");
+    if (errorMsg) {
+      errorMsg.textContent = "לא ניתן לעבור אודישן ללא אישור נשר מוסמך";
+      errorMsg.style.display = "block";
     }
     return;
   }
@@ -205,18 +189,9 @@ function updateItem(item, newStatus, event) {
 
 function deleteItem(item) {
   const items = getItems();
-
-  let index = -1;
-  for (let i = 0; i < items.length; i++) {
-    if (
-      items[i].name === item.name &&
-      items[i].email === item.email &&
-      items[i].song === item.song
-    ) {
-      index = i;
-      break;
-    }
-  }
+  const index = items.findIndex(i =>
+    i.name === item.name && i.email === item.email && i.song === item.song
+  );
 
   if (index !== -1) {
     items.splice(index, 1);
@@ -229,35 +204,22 @@ function updateStats(items) {
   if (stats === null) return;
 
   const total = items.length;
-  let passed = 0;
-  for (let i = 0; i < items.length; i++) {
-    if (items[i].status === "עבר אודישן") {
-      passed++;
-    }
-  }
+  const passed = items.filter(i => i.status === "עבר אודישן").length;
 
   const wingsStats = {};
-  for (let i = 0; i < items.length; i++) {
-    const wingType = items[i].wing;
-    if (wingsStats[wingType] === undefined) {
-      wingsStats[wingType] = 1;
-    } else {
-      wingsStats[wingType]++;
-    }
+  for (const i of items) {
+    wingsStats[i.wing] = (wingsStats[i.wing] || 0) + 1;
   }
 
-  let wingsText = "";
-  const keys = Object.keys(wingsStats);
-  for (let i = 0; i < keys.length; i++) {
-    wingsText += keys[i] + ": " + wingsStats[keys[i]];
-    if (i < keys.length - 1) {
-      wingsText += " | ";
-    }
-  }
+  const wingsText = Object.entries(wingsStats)
+    .map(([wing, count]) => `${wing}: ${count}`)
+    .join(" | ");
 
-  stats.textContent = "סה\"כ נרשמים: " + total + " | עברו אודישן: " + passed + " | " + wingsText;
+  stats.textContent = `סה"כ נרשמים: ${total} | עברו אודישן: ${passed} | ${wingsText}`;
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  renderItems();
+  if (list !== null) {
+    renderItems();
+  }
 });
