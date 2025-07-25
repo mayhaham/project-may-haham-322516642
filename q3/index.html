@@ -11,6 +11,11 @@
   <header>
     <h1>חידון שירים לבעלי כנפיים</h1>
     <p>מערכת הרשמה לתחרות המעופפים המוזיקלית!</p>
+    <img src="images/bird-sing.jpg" alt="ציפור שרה" class="header-img">
+    <nav>
+      <a href="view.html">לרשימת המועמדים</a><span>|</span>
+      <a href="index.html">לטופס הרשמה</a> 
+    </nav>
   </header>
 
   <main>
@@ -18,13 +23,13 @@
       <h2>טופס הרשמה</h2>
       <form id="registrationForm">
         <label for="name">שם פרטי ובמה:</label>
-        <input type="text" id="name" required />
+        <input type="text" id="name" />
 
         <label for="email">אימייל:</label>
-        <input type="email" id="email" required />
+        <input type="email" id="email" />
 
         <label for="wingType">סוג כנפיים:</label>
-        <select id="wingType" required>
+        <select id="wingType">
           <option value="">בחר סוג כנפיים</option>
           <option>נוצות</option>
           <option>עור</option>
@@ -32,21 +37,28 @@
         </select>
 
         <label for="genre">סגנון מוזיקלי:</label>
-        <input type="text" id="genre" required />
+        <input type="text" id="genre" />
 
         <label for="song">שיר נבחר:</label>
-        <input type="text" id="song" required />
+        <input type="text" id="song" />
 
         <label for="experience">ניסיון קודם (בשנים):</label>
-        <input type="number" id="experience" min="0" max="50" required />
+        <input type="number" id="experience" min="0" max="50" />
 
-        <label> הקול נבדק על ידי נשר מוסמך <input type="checkbox" id="verified" /> </label>
+        <div class="checkbox-wrapper">
+        <input type="checkbox" id="verified" />
+        <label for="verified">הקול נבדק על ידי נשר מוסמך</label>
+        </div>
 
-        <button type="submit">שלח טופס</button>
+        <button type="submit" aria-label="שלח את טופס ההרשמה">שלח טופס</button>
       </form>
       <div id="message" role="alert"></div>
     </section>
   </main>
+
+  <footer>
+    <p>פותח ונבנה על ידי מאי חכם | במסגרת קורס פיתוח מערכות מידע אינטרנטיות, תשפ"ה</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>

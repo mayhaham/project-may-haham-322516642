@@ -7,34 +7,50 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="page-wrapper">
 
-  <header>
-    <h1>רשימת המועמדים</h1>
-    <p>סינון, צפייה ועדכון סטטוס</p>
-  </header>
+    <header>
+      <h1>רשימת המועמדים</h1>
+      <p>סינון, צפייה ועדכון סטטוס</p>
+      <img src="images/bird-list.jpg" alt="רשימת ציפורים שרות" class="header-img">
+      <nav>
+        <a href="view.html">לרשימת המועמדים</a><span>|</span>
+        <a href="index.html">לטופס הרשמה</a> 
+      </nav>
+    </header>
 
-  <main>
-    <section class="list-section">
-      <h2>מועמדים שנשמרו</h2>
+    <main>
+      <section class="list-section">
+        <h2>מועמדים שנשמרו</h2>
 
-      <div class="filters">
-        <label for="filterGenre">סינון לפי סגנון:</label>
-        <input type="text" id="filterGenre">
+        <div class="filters">
+          <div class="filter-item">
+            <label for="filterGenre">סינון לפי סגנון:</label>
+            <input type="text" id="filterGenre" aria-label="סינון לפי סגנון מוזיקלי">
+          </div>
 
-        <label for="filterWing">סינון לפי סוג כנפיים:</label>
-        <select id="filterWing">
-          <option value="">הצג הכל</option>
-          <option value="נוצות">נוצות</option>
-          <option value="עור">עור</option>
-          <option value="אור">אור</option>
-        </select>
-      </div>
+          <div class="filter-item">
+            <label for="filterWing">סינון לפי סוג כנפיים:</label>
+            <select id="filterWing" aria-label="סינון לפי סוג כנפיים">
+              <option value="">הצג הכל</option>
+              <option value="נוצות">נוצות</option>
+              <option value="עור">עור</option>
+              <option value="אור">אור</option>
+            </select>
+          </div>
+        </div>
 
-      <div id="stats"></div>
-      <ul id="applicantsList"></ul>
-      <div id="message" role="alert"></div>
-    </section>
-  </main>
+        <div id="stats"></div>
+        <ul id="applicantsList"></ul>
+        <div id="message" role="alert"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>פותח ונבנה על ידי מאי חכם | במסגרת קורס פיתוח מערכות מידע אינטרנטיות, תשפ"ה</p>
+    </footer>
+
+  </div>
 
   <script src="script.js"></script>
 </body>

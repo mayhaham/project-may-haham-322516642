@@ -46,11 +46,15 @@ function handleSubmit(event) {
     return;
   }
 
+  const existingItems = getItems();
+  existingItems.push(newItem);
+  localStorage.setItem(storageKey, JSON.stringify(existingItems));
+
+  showMessage("הטופס נשלח בהצלחה!", "success");
+  renderSingleItem(newItem);
+
   form.reset();
-  showMessage("הטופס נשלח בהצלחה (ללא שמירה בפועל).", "success");
-
 }
-
 
 function validateItem(item) {
   const errors = [];
@@ -72,11 +76,7 @@ function validateItem(item) {
 function showMessage(msg, type) {
   if (message !== null) {
     message.textContent = msg;
-    if (type === "success") {
-      message.className = "success";
-    } else {
-      message.className = "error";
-    }
+    message.className = type;
   }
 }
 
@@ -114,76 +114,102 @@ function renderItems() {
   }
 
   const filtered = allItems.filter(function (item) {
-    const genreMatch = genreValue === "" || item.genre.includes(genreValue);
-    const wingMatch = wingValue === "" || item.wing === wingValue;
+    let genreMatch = false;
+    let wingMatch = false;
+
+    if (genreValue === "" || item.genre.includes(genreValue)) {
+      genreMatch = true;
+    }
+
+    if (wingValue === "" || item.wing === wingValue) {
+      wingMatch = true;
+    }
+
     return genreMatch && wingMatch;
   });
 
   list.innerHTML = "";
-
-  filtered.forEach(function (item, index) {
-    const li = document.createElement("li");
-    li.innerHTML =
-      "<strong>" + item.name + "</strong> - " + item.song + " (" + item.genre + ")<br>" +
-      "כנפיים: " + item.wing + " | סטטוס: " + item.status;
-
-    const btns = document.createElement("div");
-    btns.className = "status-btns";
-
-    const passBtn = document.createElement("button");
-    passBtn.textContent = "עבר אודישן";
-    passBtn.onclick = function () {
-      updateItem(item, "עבר אודישן");
-    };
-
-    const failBtn = document.createElement("button");
-    failBtn.textContent = "לא עבר";
-    failBtn.onclick = function () {
-      updateItem(item, "לא עבר");
-    };
-
-    const delBtn = document.createElement("button");
-    delBtn.textContent = "מחק";
-    delBtn.onclick = function () {
-      deleteItem(item);
-    };
-
-    const errorMsg = document.createElement("div");
-    errorMsg.className = "error-message";
-
-    btns.appendChild(passBtn);
-    btns.appendChild(failBtn);
-    btns.appendChild(delBtn);
-
-    li.appendChild(btns);
-    li.appendChild(errorMsg);
-    list.appendChild(li);
-  });
-
+  filtered.forEach(renderSingleItem);
   updateStats(filtered);
 }
 
-function updateItem(item, newStatus) {
-  const items = getItems();
-  const index = items.findIndex(function (i) {
-    return i.name === item.name && i.email === item.email && i.song === item.song;
-  });
-
-  if (index === -1) {
+function renderSingleItem(item) {
+  if (list === null) {
     return;
   }
 
-  const currentItem = items[index];
+  const li = document.createElement("li");
+  li.innerHTML =
+    "<strong>" + item.name + "</strong> - " + item.song + " (" + item.genre + ")<br>" +
+    "כנפיים: " + item.wing + " | סטטוס: " + item.status;
+
+  const btns = document.createElement("div");
+  btns.className = "status-btns";
+
+  const passBtn = document.createElement("button");
+  passBtn.textContent = "עבר אודישן";
+  passBtn.setAttribute("aria-label", "שנה סטטוס לעבר אודישן");
+  passBtn.onclick = function (event) {
+    updateItem(item, "עבר אודישן", event);
+  };
+
+  const failBtn = document.createElement("button");
+  failBtn.textContent = "לא עבר";
+  failBtn.setAttribute("aria-label", "שנה סטטוס ללא עבר");
+  failBtn.onclick = function (event) {
+    updateItem(item, "לא עבר", event);
+  };
+
+  const delBtn = document.createElement("button");
+  delBtn.textContent = "מחק";
+  delBtn.setAttribute("aria-label", "מחק מועמד זה");
+  delBtn.onclick = function () {
+    deleteItem(item);
+  };
+
+  const errorMsg = document.createElement("div");
+  errorMsg.className = "error-message";
+
+  btns.appendChild(passBtn);
+  btns.appendChild(failBtn);
+  btns.appendChild(delBtn);
+  li.appendChild(btns);
+  li.appendChild(errorMsg);
+  list.appendChild(li);
+}
+
+function updateItem(item, newStatus, event) {
+  const items = getItems();
+
+  let foundIndex = -1;
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].name === item.name &&
+        items[i].email === item.email &&
+        items[i].song === item.song) {
+      foundIndex = i;
+      break;
+    }
+  }
+
+  if (foundIndex === -1) {
+    return;
+  }
+
+  const currentItem = items[foundIndex];
 
   if (newStatus === "עבר אודישן" && currentItem.verified !== true) {
     renderItems();
-    setTimeout(function () {
-      const allErrors = document.querySelectorAll(".error-message");
-      if (allErrors.length > index) {
-        allErrors[index].textContent = "לא ניתן לעבור אודישן ללא אישור נשר מוסמך";
-        allErrors[index].style.display = "block";
+
+    const buttonClicked = event.target;
+    const li = buttonClicked.closest("li");
+    if (li !== null) {
+      const errorMsg = li.querySelector(".error-message");
+      if (errorMsg !== null) {
+        errorMsg.textContent = "לא ניתן לעבור אודישן ללא אישור נשר מוסמך";
+        errorMsg.style.display = "block";
       }
-    }, 10);
+    }
+
     return;
   }
 
@@ -194,9 +220,17 @@ function updateItem(item, newStatus) {
 
 function deleteItem(item) {
   const items = getItems();
-  const index = items.findIndex(function (i) {
-    return i.name === item.name && i.email === item.email && i.song === item.song;
-  });
+
+  let index = -1;
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].name === item.name &&
+        items[i].email === item.email &&
+        items[i].song === item.song) {
+      index = i;
+      break;
+    }
+  }
+
   if (index !== -1) {
     items.splice(index, 1);
     localStorage.setItem(storageKey, JSON.stringify(items));
@@ -220,24 +254,28 @@ function updateStats(items) {
 
   const wingsStats = {};
   for (let i = 0; i < items.length; i++) {
-    const wing = items[i].wing;
-    if (wingsStats.hasOwnProperty(wing) === false) {
-      wingsStats[wing] = 1;
+    const wingType = items[i].wing;
+    if (wingsStats[wingType] === undefined) {
+      wingsStats[wingType] = 1;
     } else {
-      wingsStats[wing] = wingsStats[wing] + 1;
+      wingsStats[wingType]++;
     }
   }
 
   let wingsText = "";
-  const wingTypes = Object.keys(wingsStats);
-  for (let i = 0; i < wingTypes.length; i++) {
-    const type = wingTypes[i];
+  const keys = Object.keys(wingsStats);
+  for (let i = 0; i < keys.length; i++) {
+    const type = keys[i];
     const count = wingsStats[type];
     wingsText += type + ": " + count;
-    if (i < wingTypes.length - 1) {
+    if (i < keys.length - 1) {
       wingsText += " | ";
     }
   }
 
   stats.textContent = "סה\"כ נרשמים: " + total + " | עברו אודישן: " + passed + " | " + wingsText;
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  renderItems();
+});
